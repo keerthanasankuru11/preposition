@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drop Items in Correct Spots</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to top, #daeefd, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    .game-container {
+      margin-top: 20px;
+      border: 6px solid white;
+      border-radius: 30px;
+      width: 600px;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .room-image {
+      width: 100%;
+      border-radius: 20px;
+      display: block;
+    }
+
+    .item-options {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      background: #eaf5ff;
+      border-radius: 20px;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .item-options img {
+      width: 80px;
+      height: 80px;
+      border-radius: 15px;
+      background-color: white;
+      cursor: grab;
+      border: none;
+      padding: 0;
+    }
+
+    .instruction-box {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: #fff3c6;
+      font-weight: bold;
+      font-size: 1.1em;
+      text-align: center;
+    }
+
+    .placed-item {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      z-index: 5;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container" id="gameContainer">
+    <img src="l1.jpg" alt="Living Room" class="room-image" />
+
+    <!-- Draggable items -->
+    <div class="item-options">
+      <img id="ball" src="soccer.png" alt="Ball" draggable="true" ondragstart="dragStart(event)" />
+      <img id="cat" src="catie.png" alt="Cat" draggable="true" ondragstart="dragStart(event)" />
+      <img  id="lamp" src="dog.png" alt="Lamp" draggable="true" ondragstart="dragStart(event) " />
+    </div>
+
+    <div class="instruction-box">
+      Place the ball on the sofa, the cat on the mat, and the dog beside the sofa.
+    </div>
+  </div>
+
+  <script>
+    function dragStart(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    document.getElementById('gameContainer').addEventListener('dragover', function (ev) {
+      ev.preventDefault();
+    });
+
+    document.getElementById('gameContainer').addEventListener('drop', function (ev) {
+      ev.preventDefault();
+      const id = ev.dataTransfer.getData("text");
+      const item = document.getElementById(id);
+
+      // Prevent dropping same item twice
+      if (!item || item.style.display === "none") return;
+
+      // Hide original from options
+      item.style.display = "none";
+
+      // Create and position placed item
+      const newItem = document.createElement("img");
+      newItem.src = item.src;
+      newItem.className = "placed-item";
+
+      if (id === "ball") {
+      newItem.style.width = "50px";
+      newItem.style.height = "50px";
+      newItem.style.top = "220px";
+      newItem.style.left = "245px";
+    } else if (id === "cat") {
+      newItem.style.width = "100px";
+      newItem.style.height = "100px";
+      newItem.style.top = "300px";
+      newItem.style.left = "290px";
+    } else if (id === "lamp") {
+      newItem.style.width = "100px";  // 🐶 Bigger dog
+      newItem.style.height = "150px";
+      newItem.style.top = "200px";
+      newItem.style.left = "500px";
+    }
+
+      document.getElementById("gameContainer").appendChild(newItem);
+    });
+  </script>
+
+</body>
+</html>
